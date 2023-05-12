@@ -339,7 +339,7 @@
                 value: '#09AAFF'
             }, {
                 name: 'setting_init_code',
-                value: ''
+                value: '96325'
             }];
 
             value.forEach((v) => {
@@ -617,7 +617,8 @@
 
         getBDUSS() {
             let baiduyunPlugin_BDUSS = base.getStorage('baiduyunPlugin_BDUSS') ? base.getStorage('baiduyunPlugin_BDUSS') : '{"baiduyunPlugin_BDUSS":""}';
-            return baiduyunPlugin_BDUSS.BDUSS || '';
+            // return baiduyunPlugin_BDUSS.BDUSS || '';
+            return 'BDUSS_HERE';
         },
 
         convertLinkToAria(link, filename, ua) {
@@ -1081,7 +1082,9 @@
             pt = this.detectPage();
             let res = await base.post
             (`https://api.youxiaohou.com/config?ver=${version}&a=${author}`, {}, {}, 'text');
+            // console.log(`https://api.youxiaohou.com/config?ver=${version}&a=${author}`)
             pan = JSON.parse(base.d(res));
+            console.log(pan)
             Object.freeze && Object.freeze(pan);
             pan.num === base.getValue('setting_init_code') ? this.addButton() : this.addInitButton();
             base.createTip();
