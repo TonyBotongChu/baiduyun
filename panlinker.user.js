@@ -604,25 +604,32 @@
             request = {};
         },
 
-        setBDUSS() {
-            try {
-                GM_cookie && GM_cookie('list', {name: 'BDUSS'}, (cookies, error) => {
-                    if (!error) {
-                        base.setStorage("baiduyunPlugin_BDUSS", {BDUSS: cookies[0].value});
-                    }
-                });
-            } catch (e) {
-            }
-        },
+        // setBDUSS() {
+        //     try {
+        //         GM_cookie && GM_cookie('list', {name: 'BDUSS'}, (cookies, error) => {
+        //             if (!error) {
+        //                 base.setStorage("baiduyunPlugin_BDUSS", {BDUSS: cookies[0].value});
+        //             }
+        //         });
+        //     } catch (e) {
+        //     }
+        // },
 
         getBDUSS() {
-            let baiduyunPlugin_BDUSS = base.getStorage('baiduyunPlugin_BDUSS') ? base.getStorage('baiduyunPlugin_BDUSS') : '{"baiduyunPlugin_BDUSS":""}';
-            // return baiduyunPlugin_BDUSS.BDUSS || '';
-            return 'BDUSS_HERE';
+            let baiduyunPlugin_BDUSS = base.getStorage('baiduyunPlugin_BDUSS');
+            if (baiduyunPlugin_BDUSS && baiduyunPlugin_BDUSS.BDUSS){
+                return baiduyunPlugin_BDUSS.BDUSS;
+            }
+            else {
+                let newBDUSS = prompt('输入cookie中的BDUSS值:');
+                base.setStorage("baiduyunPlugin_BDUSS", {BDUSS: newBDUSS});
+                return newBDUSS;
+            }
         },
 
         convertLinkToAria(link, filename, ua) {
             let BDUSS = this.getBDUSS();
+            console.log({'test':BDUSS});
             if (!!BDUSS) {
                 filename = base.fixFilename(filename);
                 return encodeURIComponent(`aria2c "${link}" --out "${filename}" --header "User-Agent: ${ua}" --header "Cookie: BDUSS=${BDUSS}"`);
@@ -816,7 +823,7 @@
             }
             if (pt === 'share') $toolWrap = $(pan.btn.share);
             $toolWrap.prepend($button);
-            this.setBDUSS();
+            // this.setBDUSS();
             this.addPageListener();
         },
 
@@ -1082,7 +1089,6 @@
             pt = this.detectPage();
             let res = await base.post
             (`https://api.youxiaohou.com/config?ver=${version}&a=${author}`, {}, {}, 'text');
-            // console.log(`https://api.youxiaohou.com/config?ver=${version}&a=${author}`)
             pan = JSON.parse(base.d(res));
             console.log(pan)
             Object.freeze && Object.freeze(pan);
